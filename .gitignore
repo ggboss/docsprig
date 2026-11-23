@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.zudoku/
+.env*
+*.tsbuildinfo
+.DS_Store
+.data/
+!.env.example
+
+# Local editor state and generated reports
+.idea/
+.vscode/
+coverage/
+playwright-report/
+test-results/

@@ -1,0 +1,52 @@
+openapi: 3.1.0
+info:
+  title: Example API
+  version: 0.1.0-demo
+  description: 本地 UI 试用契约，所有字段和数据均为演示，不作为正式对接依据。
+servers:
+  - url: https://api.example.invalid
+    description: 仅占位，不可请求
+paths:
+  /demo/v1/user/info:
+    get:
+      x-zudoku-playground-enabled: false
+      tags: [用户服务]
+      operationId: demoGetUserInfo
+      summary: 查询用户信息
+      description: 演示如何在门户展示查询参数、鉴权和响应示例，不发送请求。
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: userId
+          required: true
+          description: 演示用户标识
+          schema:
+            type: string
+          example: demo-user-001
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [userId, status]
+                properties:
+                  userId:
+                    type: string
+                    description: 演示用户标识
+                  status:
+                    type: string
+                    description: 演示用户状态
+                    enum: [active, inactive]
+              example:
+                userId: demo-user-001
+                status: active
+        '401':
+          description: 未提供有效的访问令牌
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer

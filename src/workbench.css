@@ -1,0 +1,284 @@
+/* Let the workspace use the portal's full content width. */
+.prose:has(> .wb) {
+  width:100%;
+  max-width:none;
+  min-width:0;
+  justify-self:stretch;
+  margin-inline:0;
+  padding-top:0;
+}
+
+.wb {
+  --line:var(--color-border,#d5dde4);
+  --paper:var(--color-background,Canvas);
+  --wash:var(--color-muted,#f3f6f7);
+  --ink:var(--color-foreground,CanvasText);
+  --muted:var(--color-muted-foreground,#505f69);
+  --wb-accent:var(--primary);
+  color:var(--ink);
+  width:100%;
+  min-width:0;
+  margin-inline:auto;
+  font:normal .94rem/1.5 system-ui,sans-serif;
+}
+.wb * {box-sizing:border-box}
+.wb small,.wb-status,.wb-meta {color:var(--muted)}
+.wb button {
+  max-width:100%;
+  background:var(--paper);
+  border:1px solid var(--line);
+  color:inherit;
+  border-radius:.45rem;
+  padding:.4rem .75rem;
+  font:inherit;
+  cursor:pointer;
+}
+.wb button:not(:disabled):hover {background:var(--wash);border-color:var(--muted)}
+.wb button:disabled {opacity:.48;cursor:not-allowed}
+.wb :is(button,input,textarea,select,summary):focus-visible {outline:2px solid var(--wb-accent);outline-offset:-2px}
+.wb button.wb-primary {background:var(--wb-accent);color:var(--primary-foreground);border-color:var(--wb-accent)}
+.wb button.wb-primary:not(:disabled):hover {background:var(--wb-accent);border-color:var(--wb-accent);filter:brightness(.9)}
+.wb button[aria-pressed=true] {color:var(--wb-accent);background:color-mix(in srgb,var(--wb-accent) 8%,var(--paper));border-color:var(--wb-accent)}
+
+/* Natural page scrolling: no viewport-sized panels or nested scroll areas. */
+.wb-layout {
+  display:grid;
+  grid-template-columns:clamp(250px,22vw,280px) minmax(0,1fr);
+  align-items:start;
+  background:var(--paper);
+}
+.wb-rail .wb-tree {
+  min-width:0;
+  padding:24px 12px 24px 0;
+  border-right:1px solid var(--line);
+}
+.wb-editor {min-width:0;padding:24px clamp(24px,2.5vw,32px) 32px}
+.wb-head,.wb-pane-title,.wb-tools {display:flex;align-items:center;justify-content:space-between;gap:.65rem;flex-wrap:wrap}
+.wb-head h1,.wb-document-head h1 {font-size:clamp(28px,2.5vw,32px);font-weight:700;letter-spacing:-.03em;line-height:1.25;margin:.4rem 0}
+.wb-head small {letter-spacing:.12em;font-weight:700;font-size:.7rem}
+.wb-document-head {display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px 20px}
+.wb-document-head > div:first-child {flex:1 1 200px;min-width:0;overflow-wrap:anywhere}
+.wb-breadcrumb {font-size:.8rem;color:var(--muted);overflow-wrap:anywhere}
+.wb-breadcrumb span {opacity:.7}
+.wb-actions {display:flex;align-items:center;justify-content:flex-end;flex:0 1 auto;flex-wrap:wrap;gap:8px;min-width:0;max-width:100%;margin-left:auto}
+.wb-actions button {flex:0 0 auto;font-size:.85rem;font-weight:500;overflow-wrap:anywhere}
+.wb-actions small {flex-basis:100%;text-align:right;overflow-wrap:anywhere}
+.wb-status {margin:8px 0 16px;font-size:.8rem;overflow-wrap:anywhere}
+.wb-status:empty {display:none}
+.wb-status button {margin-left:.5rem}
+
+/* Tree, filter, and inline node actions. */
+.wb-pane-title {padding:0 .5rem .75rem;font-size:.85rem;font-weight:650}
+.wb-pane-title small {font-weight:500;font-size:.76rem}
+.wb-tree ul {list-style:none;margin:0;padding:.5rem .25rem}
+.wb-tree ul ul {margin-left:.6rem;padding:0 0 0 .15rem;border-left:1px solid var(--line)}
+.wb-tree ul:empty {display:none}
+.wb-tree-item {min-width:0}
+.wb-row {display:flex;align-items:center;min-height:2.5rem;border-radius:.4rem;margin:.15rem 0;padding:.1rem .15rem}
+.wb-row[data-active=true] {background:color-mix(in srgb,var(--wb-accent) 8%,var(--paper));color:var(--wb-accent)}
+.wb-row button {background:transparent;border:0}
+.wb-row .wb-link {flex:1;min-width:0;text-align:left;display:flex;align-items:center;gap:.4rem;padding:.45rem .4rem}
+.wb-link span {min-width:0;overflow-wrap:anywhere}
+.wb-link small {font:600 .65rem/1 monospace;min-width:1.8rem;text-align:center}
+.wb-link[aria-current=page] {color:var(--wb-accent);font-weight:600}
+.wb .wb-icon {display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.wb-row .wb-icon {width:1.85rem;min-height:1.85rem;padding:0;color:var(--muted)}
+.wb-row .wb-tree-toggle {width:1.2rem}
+/* The component supplies an inline spacer width; keep it aligned with the toggle. */
+.wb-row .wb-tree-spacer {width:1.2rem !important}
+.wb-tree-label {font-size:.875rem}
+.wb-tree-svg {flex-shrink:0;vertical-align:middle}
+.wb-tree-filter {padding:0 .45rem}
+.wb-tree-filter-label {display:flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--muted)}
+.wb-tree-filter-status {font-size:.75rem;padding:0 .5rem;color:var(--muted);overflow-wrap:anywhere}
+.wb-tree-filter-status:empty {display:none}
+.wb-options {display:flex;flex-wrap:wrap;gap:.25rem;padding:.3rem}
+.wb-options button {display:inline-flex;align-items:center;gap:.3rem;font-size:.75rem;padding:.3rem .4rem}
+
+/* Forms retain a resizable source editor; rendered previews grow with content. */
+.wb-fields {min-width:0}
+.wb-fields label {display:block;font-size:.84rem;font-weight:650}
+.wb input:not([type=search]),.wb textarea,.wb select,.wb-preview {
+  display:block;
+  width:100%;
+  min-width:0;
+  border:1px solid var(--line);
+  border-radius:.45rem;
+  background:var(--paper);
+  color:inherit;
+  padding:.65rem .8rem;
+}
+.wb input:not([type=search]),.wb select {margin:.35rem 0 .9rem;font:inherit}
+.wb input:not([type=search]) {font-weight:600}
+.wb .wb-tree-filter input {font-size:.85rem;font-weight:400;margin:.5rem 0}
+.wb :is(input:not([type=search]),textarea,select)[aria-invalid=true] {border-color:var(--color-destructive,#ad3026)}
+.wb-tools {margin:1rem 0 .5rem}
+.wb-tools > label {min-width:0;overflow-wrap:anywhere}
+.wb-tools button {font-size:.78rem;flex-shrink:0}
+.wb textarea {min-height:23rem;resize:vertical;font:.9rem/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;tab-size:2}
+.wb-preview {max-width:none;overflow-wrap:anywhere}
+.wb-guide {border-left:3px solid var(--line);padding:.8rem 1rem;background:var(--wash);margin:1rem 0}
+.wb-guide p {margin:.35rem 0 0}
+.wb-meta {font-size:.8rem;margin-top:1rem;overflow-wrap:anywhere}
+.wb-meta summary {cursor:pointer}
+.wb-error {white-space:pre-wrap;overflow-wrap:anywhere;color:var(--color-destructive,#ad3026)}
+.wb-position {display:grid;grid-template-columns:minmax(0,1fr) minmax(6rem,25%);gap:.5rem .8rem;margin:.75rem 0}
+.wb-position > label {min-width:0}
+.wb-position select,.wb-position input {margin:.3rem 0 0;padding:.45rem;font:inherit}
+.wb-position small {grid-column:1/-1}
+
+/* Reading has no flex fill or height cap. The iframe height belongs to React. */
+.wb-reading {min-width:0;padding:0;line-height:1.8;overflow-wrap:anywhere}
+.wb-reading p {margin:0 0 1rem}
+.wb-child-links {display:grid;gap:.5rem;margin-top:1rem}
+.wb-child-links button {display:flex;align-items:center;justify-content:space-between;gap:.75rem;text-align:left;padding:.7rem .85rem;overflow-wrap:anywhere}
+.wb-child-links button span {flex-shrink:0}
+.wb-code {white-space:pre;overflow-x:auto;background:var(--wash);border:1px solid var(--line);border-radius:.6rem;padding:1rem;font:.85rem/1.8 ui-monospace,SFMono-Regular,Consolas,monospace}
+.wb-format {font-size:.8rem;color:var(--muted)}
+.wb-api-preview {display:block;width:100%;min-width:0;border:0;background:var(--paper)}
+
+.wb-preview pre {max-width:100%;overflow-x:auto}
+
+/* These slot controls live outside .wb, so they own their theme and controls. */
+.wb-tabs-bar,.wb-dialog-shade {
+  --line:var(--color-border,#d5dde4);
+  --paper:var(--color-background,Canvas);
+  --wash:var(--color-muted,#f3f6f7);
+  --ink:var(--color-foreground,CanvasText);
+  --muted:var(--color-muted-foreground,#505f69);
+  --wb-accent:var(--primary);
+  color:var(--ink);
+  font:normal .875rem/1.5 system-ui,sans-serif;
+}
+.wb-tabs-bar *,.wb-dialog-shade,.wb-dialog-shade * {box-sizing:border-box}
+/* An open dialog is inserted between the bar and the original navigation. */
+.wb-tabs-bar + div:not(.wb-dialog-shade),
+.wb-tabs-bar + .wb-dialog-shade + div {display:none}
+header div:has(> div > .wb-tabs-bar) {display:block}
+header:has(.wb-tabs-bar) button[aria-label="Open navigation menu"] {display:none}
+.wb-tabs-bar {display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 24px;min-width:0;padding:0 32px}
+.wb-management-tabs {display:flex;align-items:stretch;flex:1 1 280px;flex-wrap:wrap;gap:0 20px;min-width:0;min-height:var(--top-nav-height,3.25rem)}
+.wb-tab-item {display:flex;align-items:center;gap:4px;min-width:0;max-width:100%}
+.wb-tab-item[draggable=true] {cursor:grab}
+.wb-tab-item[draggable=true]:active {cursor:grabbing}
+.wb-tab-item > [role=tab] {
+  align-self:stretch;
+  min-width:0;
+  background:transparent;
+  border:0;
+  border-bottom:2px solid transparent;
+  padding:12px 0;
+  color:var(--muted);
+  font:500 .875rem/1.5 system-ui,sans-serif;
+  cursor:pointer;
+  overflow-wrap:anywhere;
+  text-align:left;
+}
+.wb-tab-item > [role=tab][aria-selected=true] {color:var(--wb-accent);border-bottom-color:var(--wb-accent)}
+.wb-tab-item > [role=tab]:not(:disabled):hover {color:var(--ink)}
+.wb-tab-item > .wb-tab-edit {display:inline-flex;align-items:center;justify-content:center;flex:0 0 28px;width:28px;min-height:28px;background:transparent;border:0;border-radius:6px;padding:0;color:var(--muted);font:inherit;cursor:pointer}
+.wb-tab-item > .wb-tab-edit:not(:disabled):hover {color:var(--wb-accent);background:var(--wash)}
+.wb-tabs-tools {display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:8px;max-width:100%;min-width:0;padding:8px 0;margin-left:auto}
+.wb-tabs-tools :is(button,a),.wb-dialog button {display:inline-flex;align-items:center;justify-content:center;max-width:100%;min-height:34px;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:6px 10px;color:var(--ink);font:inherit;text-decoration:none;cursor:pointer;overflow-wrap:anywhere}
+.wb-tabs-tools a {color:var(--muted);background:transparent;border-color:transparent}
+.wb-tabs-tools :is(button:not(:disabled),a):hover,.wb-dialog button:not(:disabled):hover {background:var(--wash);border-color:var(--muted)}
+.wb-tabs-bar button:disabled,.wb-dialog :is(button,input):disabled {opacity:.48;cursor:not-allowed}
+.wb-tabs-bar :is(button,a):focus-visible,.wb-dialog :is(button,input):focus-visible {outline:2px solid var(--wb-accent);outline-offset:-2px}
+
+/* Keep the modal usable even with long titles or a short mobile viewport. */
+.wb-dialog-shade {position:fixed;inset:0;z-index:1000;display:grid;place-items:center;overflow-y:auto;padding:24px;background:rgb(0 0 0 / .42)}
+.wb-dialog {width:min(100%,440px);min-width:0;max-height:calc(100dvh - 48px);overflow-y:auto;padding:24px;background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:0 16px 48px rgb(0 0 0 / .2);overflow-wrap:anywhere;text-align:left}
+.wb-dialog h2 {margin:0 0 20px;color:var(--ink);font-size:1.125rem;font-weight:650;line-height:1.4;letter-spacing:-.02em}
+.wb-dialog form {display:grid;gap:12px;min-width:0}
+.wb-dialog label {display:block;color:var(--ink);font-weight:600}
+.wb-dialog input {display:block;width:100%;min-width:0;margin:0;padding:9px 12px;background:var(--paper);border:1px solid var(--line);border-radius:6px;color:var(--ink);font:inherit}
+.wb-dialog p {margin:0;color:var(--muted);font-size:.8rem;line-height:1.6}
+.wb-tab-order {display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:8px 0}
+.wb-tab-order > span {margin-right:auto;color:var(--muted)}
+.wb-tab-order button {font-size:.8rem}
+.wb-dialog-actions {display:flex;justify-content:flex-end;flex-wrap:wrap;gap:8px;margin-top:8px;padding-top:16px;border-top:1px solid var(--line)}
+.wb-dialog-actions button[type=submit] {background:var(--wb-accent);border-color:var(--wb-accent);color:var(--primary-foreground)}
+.wb-dialog-actions button[type=submit]:not(:disabled):hover {background:var(--wb-accent);border-color:var(--wb-accent);filter:brightness(.9)}
+
+/* One breakpoint for the entire workbench, including tabs and form columns. */
+@media (max-width:760px) {
+  .wb-layout {grid-template-columns:minmax(0,1fr)}
+  .wb-rail .wb-tree {border-right:0;border-bottom:1px solid var(--line);padding:16px 0}
+  .wb-editor {padding:24px 0}
+  .wb-document-head {gap:12px}
+  .wb-actions {flex-basis:100%;justify-content:flex-start;margin-left:0}
+  .wb-actions small {text-align:left}
+  .wb-position {grid-template-columns:minmax(0,1fr)}
+  .wb-tabs-bar {padding-inline:16px;gap:0 16px}
+  .wb-management-tabs {flex-basis:100%;gap:0 16px}
+  .wb-tabs-tools {flex-basis:100%;justify-content:flex-start;margin-left:0}
+  .wb-dialog-shade {padding:16px}
+  .wb-dialog {padding:20px;max-height:calc(100dvh - 32px)}
+}
+.wb-icon,.wb-logout,.wb-inline-tab button {display:inline-grid;place-items:center;align-self:center;width:32px;height:32px;border:0;background:transparent;color:inherit;border-radius:6px;cursor:pointer}
+.wb-icon:hover:not(:disabled),.wb-logout:hover,.wb-inline-tab button:hover {background:var(--color-muted,#eee)}
+.wb-inline-tab {display:flex;align-items:center;gap:2px;align-self:center;max-width:100%;border-bottom:2px solid var(--wb-accent)}
+.wb-inline-tab input {min-width:0;width:9em;background:transparent;color:inherit;padding:5px;font:inherit}
+@media (hover:hover) {.wb-tab-item > .wb-tab-edit {opacity:0}.wb-tab-item:hover > .wb-tab-edit,.wb-tab-item:focus-within > .wb-tab-edit {opacity:1}}
+
+.wb-rail {position:relative;min-width:0;min-height:36px}.wb .wb-rail-toggle {position:absolute;right:0;transform:translateX(50%);display:grid;place-items:center;padding:0;line-height:1;top:5px;z-index:1;border:1px solid var(--line);border-radius:50%;width:25px;height:25px;color:inherit;background:var(--paper);cursor:pointer}.wb-tree-closed {grid-template-columns:28px minmax(0,1fr)}
+@media(max-width:760px){.wb-tree-closed {grid-template-columns:minmax(0,1fr)}.wb .wb-rail-toggle {right:0;transform:none}.wb-rail .wb-pane-title{padding-right:32px}}
+/* Authoring extends the reader layout; management actions do not change reading geometry. */
+.wb {--portal-wash:var(--wash);--portal-muted:var(--muted);--portal-line:var(--line);--portal-accent:var(--wb-accent)}
+.wb-rail .wb-tree {font:400 var(--text-sm,.875rem)/1.25rem var(--font-sans,system-ui),sans-serif}
+.wb-rail .portal-filter {margin-block:.5rem}
+.wb-row {margin-block:1px;min-height:2rem;border-radius:var(--radius-lg,.5rem)}
+.wb-row:hover,.wb-row[data-active=true] {background:var(--color-accent,var(--wash));color:var(--ink)}
+.wb-link[aria-current=page] {color:var(--ink);font-weight:500}
+.wb-row .wb-link {padding-block:.375rem}.wb-tree-label {overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(hover:hover){.wb-row:not(:hover):not(:focus-within) :is(.wb-tree-add,.wb-tree-edit,.wb-tree-delete){opacity:0}}
+@media(min-width:761px){
+  .wb-layout {grid-template-columns:clamp(190px,18vw,270px) minmax(0,1fr)}.wb-layout.wb-tree-closed {grid-template-columns:26px minmax(0,1fr)}
+  .wb .wb-rail {position:sticky;align-self:start;top:var(--header-height);height:calc(100dvh - var(--header-height));border-inline-end:1px solid var(--line)}
+  #wb-directory {height:100%;overflow-y:auto;overscroll-behavior-y:contain}
+  .wb-rail .wb-tree {border-right:0}.wb .wb-rail-toggle {top:85%;transform:translate(50%,-50%)}
+}
+
+/* Tree moves: edge markers reorder siblings; the center moves into a group. */
+.wb-row[draggable=true] {cursor:grab}
+.wb-row[draggable=true] .wb-link {cursor:grab}
+.wb-row[data-dragging=true] {opacity:.45}
+.wb-row[data-drop] {position:relative}
+.wb-row[data-drop=inside] {outline:2px solid var(--wb-accent);outline-offset:-2px;background:color-mix(in srgb,var(--wb-accent) 12%,var(--paper))}
+.wb-row[data-drop=before]::before,.wb-row[data-drop=after]::after {content:'';position:absolute;left:0;right:0;height:2px;background:var(--wb-accent);pointer-events:none;z-index:1}
+.wb-row[data-drop=before]::before {top:-1px}
+.wb-row[data-drop=after]::after {bottom:-1px}
+.wb-tree-drag-hint {margin:.35rem .5rem;font-size:.72rem;line-height:1.4;color:var(--muted)}
+/* Keep the active tab's management actions discoverable without a hover. */
+.wb-tab-item:has(> [role=tab][aria-selected=true]) > .wb-tab-edit {opacity:1}
+.wb-tab-item > .wb-tab-edit:disabled {color:var(--muted);cursor:not-allowed}
+.wb-tab-item > .wb-tab-edit:disabled svg {opacity:.48}
+.wb-management-tabs > .wb-publish-tabs {display:inline-flex;align-items:center;gap:.3rem;width:auto;padding:0 .65rem;white-space:nowrap;font-size:.85rem}
+.wb-publish-tabs:not(:disabled) {color:var(--wb-accent);background:var(--wash)}
+.wb-mode-switch {display:inline-flex;align-items:center;gap:2px;padding:3px;border:1px solid var(--border);border-radius:9px;background:var(--wash)}
+.wb .wb-mode-switch button {border:0;box-shadow:none;border-radius:6px;background:transparent;color:var(--muted);padding:.38rem .65rem}
+.wb .wb-mode-switch button[aria-pressed=true] {color:var(--ink);background:var(--paper);box-shadow:0 1px 3px #0002}
+
+.wb .md-editor {--md-accent:var(--wb-accent);--md-line:var(--line);--md-wash:var(--wash);--portal-bg:var(--paper);--portal-muted:var(--muted)}
+.wb .api-editor :is(input:not([type=search]),select) {margin:0;font-weight:400}
+.wb .api-editor input[type=checkbox] {width:auto;display:inline-block}
+.wb .api-editor label {display:grid}
+.wb .api-editor .api-editor-check {display:flex}
+/* In edit mode the page heading itself is the editable title. */
+.wb input.wb-inline-title:not([type=search]) {width:100%;min-width:0;padding:.15rem 0;margin:.25rem 0;border:0;border-radius:0;background:transparent;color:var(--ink);font-family:inherit;font-size:clamp(1.65rem,2.5vw,2.15rem);font-weight:700;line-height:1.3;letter-spacing:-.03em}
+.wb input.wb-inline-title:not([type=search]):focus-visible {outline:0;box-shadow:0 1px var(--wb-accent)}
+.wb .wb-editor[data-editing] .wb-tools {padding:.4rem 0 .65rem;margin:1rem 0 .8rem;border-bottom:1px solid var(--line)}
+.wb .wb-editor[data-editing] .wb-tools strong {font-size:.87rem;font-weight:600;color:var(--muted)}
+/* The formatting popover is portaled outside .wb: resolve its colors from the site theme. */
+.wb .md-editor,.md-editor-overlay {--portal-text:var(--color-foreground,CanvasText);--portal-bg:var(--color-background,Canvas);--portal-muted:var(--color-muted-foreground,GrayText);--portal-accent:var(--primary);--portal-line:var(--color-border,#d5dde4);--portal-wash:var(--color-muted,#f3f6f7)}
+/* Reserve the first screen for the active parameter/body/response panel. */
+.wb .api-editor {row-gap:.65rem}
+.wb .api-editor > label,.wb .api-editor > .api-editor-grid > label,.wb .api-editor-route label {margin-block:0}
+.wb .api-editor > label > textarea {min-height:3rem;font-family:inherit;padding:.4rem .6rem}
+.wb .api-editor > .api-editor-tabs {margin-bottom:.25rem}
+/* A Markdown draft is a page, not a textarea card. Keep the window as the only scroll container. */
+.wb-editor[data-document-canvas] {display:flex;flex-direction:column;min-height:calc(100dvh - var(--header-height,7rem));padding-inline-start:clamp(2.3rem,3.5vw,4rem)}
+.wb-editor[data-document-canvas] :is(.wb-fields,.wb-edit-surface,.md-editor:not(.md-editor-source),.md-editor:not(.md-editor-source)>.tiptap-editor,.md-editor:not(.md-editor-source)>div:has(>.md-editor-document)) {display:flex;flex:1;flex-direction:column;min-width:0}
+.wb-editor[data-document-canvas] .md-editor:not(.md-editor-source) {border:none;border-radius:0;background:transparent;box-shadow:none}
+.wb-editor[data-document-canvas] .md-editor-document {flex:1;min-height:15rem;padding:1rem 0 3rem;box-shadow:none}
+.wb-editor[data-document-canvas] .md-editor-line-plus {left:-2.1rem}

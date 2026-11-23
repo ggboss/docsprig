@@ -1,0 +1,118 @@
+diff --git a/src/lib/plugins/openapi/OperationList.tsx b/src/lib/plugins/openapi/OperationList.tsx
+index 42647cb68d4e8b1ccf846fc7e87fa0d6fc130f49..4e910572c127d1c3845918eafcb59766f3892ebf 100644
+--- a/src/lib/plugins/openapi/OperationList.tsx
++++ b/src/lib/plugins/openapi/OperationList.tsx
+@@ -13,7 +13,6 @@ import { Endpoint } from "./Endpoint.js";
+ import { graphql } from "./graphql/index.js";
+ import { UNTAGGED_PATH } from "./index.js";
+ import { OperationListItem } from "./OperationListItem.js";
+-import { useSelectedServer } from "./state.js";
+ import { sanitizeMarkdownForMetatag } from "./util/sanitizeMarkdownForMetatag.js";
+ import { readSeoExtension } from "./util/seoExtension.js";
+ import { useWarmupSchema } from "./util/useWarmupSchema.js";
+@@ -208,9 +207,6 @@ export const OperationList = ({
+     untagged,
+   });
+   const schema = useSuspenseQuery(query).data.schema;
+-  const { resolvedServer: globalSelectedServer } = useSelectedServer(
+-    schema.servers,
+-  );
+   const title = schema.title;
+   const summary = schema.summary;
+   const description = schema.description;
+@@ -325,7 +321,6 @@ export const OperationList = ({
+           <div key={fragment.slug}>
+             <OperationListItem
+               operationFragment={fragment}
+-              globalSelectedServer={globalSelectedServer}
+               shouldLazyHighlight={shouldLazyHighlight}
+             />
+             <hr className="my-10" />
+diff --git a/src/lib/plugins/openapi/OperationListItem.tsx b/src/lib/plugins/openapi/OperationListItem.tsx
+index 82b6a8ab6fc44b39fe504f4daba06b7840866e23..e0eadfc7d7b19c50c0960548f980e6af150db5cc 100644
+--- a/src/lib/plugins/openapi/OperationListItem.tsx
++++ b/src/lib/plugins/openapi/OperationListItem.tsx
+@@ -17,7 +17,7 @@ import { SchemaView } from "./schema/SchemaView.js";
+ import { withBinaryMediaType } from "./schema/utils.js";
+ import { SecurityRequirements } from "./SecurityRequirements.js";
+ import { Sidecar } from "./Sidecar.js";
+-import { useResolvedServerUrl } from "./state.js";
++import { useSelectedServer } from "./state.js";
+ import { getGraphQLEndpoint } from "./util/graphqlEndpoint.js";
+ import { methodForColor } from "./util/methodToColor.js";
+ 
+@@ -26,11 +26,9 @@ export type ParameterGroup = (typeof PARAM_GROUPS)[number];
+ 
+ export const OperationListItem = ({
+   operationFragment,
+-  globalSelectedServer,
+   shouldLazyHighlight,
+ }: {
+   operationFragment: FragmentType<typeof OperationsFragment>;
+-  globalSelectedServer?: string;
+   shouldLazyHighlight?: boolean;
+ }) => {
+   const operation = useFragment(OperationsFragment, operationFragment);
+@@ -40,10 +38,9 @@ export const OperationListItem = ({
+   );
+   const { options } = useOasConfig();
+ 
+-  // Manual server selection takes precedence over the server hierarchy.
+-  // If no manual selection, fall back to operation's first server (already respects operation > path > global hierarchy)
+-  const fallbackServerUrl = useResolvedServerUrl(operation.servers.at(0));
+-  const displayServerUrl = globalSelectedServer || fallbackServerUrl;
++  // GraphQL supplies effective operation > path > document servers. Resolve
++  // selection within that list, just like Playground; ignore stale global URLs.
++  const { resolvedServer: displayServerUrl } = useSelectedServer(operation.servers);
+ 
+   const first = operation.responses.at(0);
+   const [selectedResponse, setSelectedResponse] = useState(first?.statusCode);
+@@ -218,7 +215,6 @@ export const OperationListItem = ({
+             <Sidecar
+               selectedResponse={selectedResponse}
+               operation={operation}
+-              globalSelectedServer={globalSelectedServer}
+               shouldLazyHighlight={shouldLazyHighlight}
+             />
+           );
+diff --git a/src/lib/plugins/openapi/Sidecar.tsx b/src/lib/plugins/openapi/Sidecar.tsx
+index a542008cfacce04c08f89cbf6de2a5a6f716ea01..dcf472b072f61a56dc3ba9f1d4f716f566414bbb 100644
+--- a/src/lib/plugins/openapi/Sidecar.tsx
++++ b/src/lib/plugins/openapi/Sidecar.tsx
+@@ -24,7 +24,7 @@ import { PlaygroundDialogWrapper } from "./PlaygroundDialogWrapper.js";
+ import { RequestBodySidecarBox } from "./RequestBodySidecarBox.js";
+ import { ResponsesSidecarBox } from "./ResponsesSidecarBox.js";
+ import { withBinaryMediaType } from "./schema/utils.js";
+-import { useResolvedServerUrl } from "./state.js";
++import { useSelectedServer } from "./state.js";
+ import { createHttpSnippet, getConverted } from "./util/createHttpSnippet.js";
+ import { extractOperationSecuritySchemes } from "./util/extractOperationSecuritySchemes.js";
+ import {
+@@ -106,12 +106,10 @@ const getCodeSamples = (
+ export const Sidecar = ({
+   operation,
+   selectedResponse,
+-  globalSelectedServer,
+   shouldLazyHighlight,
+ }: {
+   operation: OperationsFragmentFragment;
+   selectedResponse?: string;
+-  globalSelectedServer?: string;
+   shouldLazyHighlight?: boolean;
+ }) => {
+   const { options } = useOasConfig();
+@@ -195,11 +193,9 @@ export const Sidecar = ({
+     />
+   );
+ 
+-  // Manual server selection takes precedence over the server hierarchy.
+-  // If no manual selection, fall back to operation's first server (already respects operation > path > global hierarchy).
+-  // Its variables are resolved against the same persisted overrides the playground uses.
+-  const fallbackServerUrl = useResolvedServerUrl(operation.servers.at(0));
+-  const selectedServer = globalSelectedServer || fallbackServerUrl || "";
++  // GraphQL supplies effective operation > path > document servers. Resolve
++  // selection within that list, just like Playground; ignore stale global URLs.
++  const { resolvedServer: selectedServer } = useSelectedServer(operation.servers);
+   const operationUrl = joinUrl(selectedServer, operation.path);
+ 
+   const securitySchemes = useMemo(

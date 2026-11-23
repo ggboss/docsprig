@@ -1,0 +1,89 @@
+@import "./markdown.css";
+.prose:has(> .portal) {width:100%;max-width:none;min-width:0;justify-self:stretch;margin-inline:0;padding-top:0}
+.portal {--portal-line:var(--color-border,#d5dde4);--portal-paper:var(--color-background,Canvas);--portal-wash:var(--color-muted,#f3f6f7);--portal-muted:var(--color-muted-foreground,#505f69);--portal-accent:var(--primary);width:100%;min-width:0;color:var(--color-foreground,CanvasText);font:normal .94rem/1.5 system-ui,sans-serif}
+.portal * {box-sizing:border-box}
+.portal :is(button,input,a):focus-visible,.portal-tabs a:focus-visible {outline:2px solid var(--ring);outline-offset:-2px}
+.portal-layout {display:grid;grid-template-columns:270px minmax(0,1fr);align-items:start;background:var(--portal-paper)}
+.portal-sidebar {min-width:0;padding:24px 12px 24px 0;border-right:1px solid var(--portal-line)}
+.portal-sidebar {font-family:var(--font-sans,ui-sans-serif),sans-serif;font-size:var(--text-sm,.875rem);line-height:1.25rem}
+.portal-filter {margin-block:.5rem}
+/* InputGroup draws its own focus ring around the icon and field together. */
+.portal-sidebar .portal-filter input:focus-visible {outline:none}
+.portal-sidebar ul {list-style:none;margin:0;padding:0}
+.portal-sidebar ul ul {margin-block:.25rem;margin-inline-start:1rem;padding-inline-start:.5rem;border-inline-start:1px solid var(--border)}
+.portal-sidebar li {min-width:0}
+.portal-group,.portal-tree-link {display:flex;align-items:center;gap:.5rem;width:100%;margin-block:1px;padding:.375rem var(--padding-nav-item,.625rem);border:0;border-radius:var(--radius-lg,var(--radius));background:transparent;color:color-mix(in srgb,var(--foreground) 80%,transparent);font:inherit;font-variant-numeric:tabular-nums;text-align:start;text-decoration:none;cursor:pointer}
+.portal-group {justify-content:space-between;font-weight:500}
+.portal-group:hover,.portal-tree-link:hover,.portal-tree-link[aria-current=page] {background:var(--accent)}
+.portal-tree-link[aria-current=page] {color:var(--accent-foreground);font-weight:500}
+.portal-sidebar :is(.portal-group,.portal-tree-link):focus-visible {outline-color:var(--ring)}
+.portal-group span,.portal-tree-link span {min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.portal-chevron {flex:none}
+.portal-group[aria-expanded=true] .portal-chevron {transform:rotate(90deg)}
+.portal-content {min-width:0;padding:24px clamp(24px,2.5vw,32px) 32px;overflow-wrap:anywhere}
+.portal-notice a {color:var(--portal-accent);text-decoration:underline}
+.portal-muted {color:var(--portal-muted,var(--color-muted-foreground,#505f69));font-size:.85rem}
+.portal-sidebar > .portal-muted {padding:0 .5rem}
+.portal-notice {padding:2rem 0;overflow-wrap:anywhere}
+.portal-notice h2 {font-size:1.15rem;font-weight:650;margin:0 0 .75rem}
+.portal-notice p {margin:0 0 1rem;color:var(--portal-muted)}
+.portal-notice button {border:1px solid var(--portal-line);border-radius:.45rem;background:var(--portal-paper);color:inherit;font:inherit;padding:.45rem .8rem;cursor:pointer}
+.portal-notice button:hover {background:var(--portal-wash)}
+.portal-child-links {display:grid;gap:.5rem}
+.portal-child-links a {display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.7rem .85rem;border:1px solid var(--portal-line);border-radius:.45rem;color:inherit;text-decoration:none}
+.portal-child-links a:hover {background:var(--portal-wash)}
+/* The slot replaces only the original top navigation while this page is mounted. */
+.portal-tabs + div {display:none}
+header div:has(> div > .portal-tabs) {display:block}
+header:has(.portal-tabs) button[aria-label="Open navigation menu"] {display:none}
+.portal-tabs {display:flex;align-items:center;flex-wrap:wrap;gap:0 2rem;min-height:var(--top-nav-height,3.25rem);padding:0 2rem}
+.portal-tabs a {align-self:stretch;max-width:100%;border-bottom:2px solid transparent;padding:.75rem 0;color:var(--color-muted-foreground,#657080);font:500 .875rem/1.5 system-ui,sans-serif;text-decoration:none;overflow-wrap:anywhere}
+.portal-tabs a[aria-current=page] {color:var(--primary);border-bottom-color:var(--primary)}
+@media(max-width:760px) {
+  .portal-layout {grid-template-columns:minmax(0,1fr)}
+  .portal-sidebar {border-right:0;border-bottom:1px solid var(--portal-line);padding:16px 0}
+  .portal-content {padding:24px 0}
+  .portal-tabs {padding-inline:1rem;gap:0 1.5rem}
+}
+.reader-layout {--rail:clamp(190px,18vw,270px);grid-template-columns:var(--rail) minmax(0,1fr)}
+.reader-layout.tree-closed {--rail:26px}
+.reader-rail {position:relative;align-self:stretch;border-inline-end:1px solid var(--portal-line);min-height:4rem}
+.reader-rail .portal-sidebar {border-right:0}
+.reader-toggle {position:sticky;top:75vh;float:right;margin-right:-13px;z-index:1;border:1px solid var(--portal-line);background:var(--portal-paper);color:inherit;border-radius:50%;width:26px;height:26px;cursor:pointer}
+.reader-rail #reader-tree {float:left;width:100%}
+@media(max-width:760px){.reader-layout {display:flex;flex-direction:column}.reader-rail,.reader-layout .portal-content {width:100%}.reader-rail {border:0;min-height:32px}.reader-toggle {float:none;position:absolute;top:4px;right:0;margin:0}}
+/* Published reader only: a stable rail, a shared text edge, and a quiet toolbar. */
+.portal {--reader-rule:color-mix(in srgb,currentColor 11%,transparent);--reader-tint:color-mix(in srgb,currentColor 6%,transparent)}
+.portal .reader-layout {--rail:clamp(14rem,18vw,17rem)}
+.portal .reader-layout.tree-closed {--rail:26px}
+.portal-tabs {flex-wrap:nowrap;justify-content:space-between;gap:1rem}
+.portal-tab-list {min-width:0;display:flex;align-self:stretch;gap:clamp(1rem,2vw,2rem);overflow-x:auto;scrollbar-width:none}
+.portal-tab-list a {flex:none;display:flex;align-items:center;white-space:nowrap}
+.portal-tabs a[aria-current=page] {color:var(--foreground);font-weight:650}
+.portal .reader-rail {border-color:var(--reader-rule)}
+.portal .portal-sidebar {padding-inline-end:1.25rem}
+.portal .portal-sidebar > nav {margin-top:1rem}
+.portal .portal-group,.portal .portal-tree-link {min-height:2.25rem;gap:.6rem;border-radius:.5rem}
+.portal .portal-sidebar nav > ul > li:has(> .portal-group):not(:first-child) {margin-top:1.25rem}
+.portal .portal-tree-link[aria-current=page] {background:var(--reader-tint);color:var(--foreground);font-weight:600}
+.portal-tree-link svg {flex:none;color:var(--portal-muted)}
+.portal-api-mark {flex:none;color:var(--primary);font:650 .64rem/1.5 ui-monospace,monospace}
+.portal .portal-content>.portal-markdown {max-width:49rem;line-height:1.85;margin-inline:0}
+.portal .portal-markdown h1,.portal .portal-title {font-size:clamp(1.8rem,2.6vw,2.35rem);line-height:1.22;letter-spacing:-.035em;margin:0 0 .85rem}
+.portal .portal-markdown h2 {margin:2.5rem 0 .8rem;padding:0;border:0}
+.portal .portal-markdown table {width:fit-content;min-width:min(100%,32rem)}
+.portal .portal-markdown :is(th,td) {border:0;border-bottom:1px solid var(--reader-rule);background:transparent;padding:.65rem 1rem .65rem 0;text-align:start}
+@media(min-width:761px){.portal .portal-content {padding:clamp(2rem,3vw,3rem) clamp(1.75rem,3.5vw,4rem) 5rem}.portal .portal-sidebar {padding-top:2rem}}
+@media(max-width:760px){.portal .portal-sidebar {padding-inline-end:2.2rem}}
+/* Keep document actions on the reading surface; tabs only change sections. */
+.portal .reader-heading {display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1.2rem}
+.portal .reader-heading h1 {margin:0;font-size:clamp(2rem,3.3vw,2.8rem);letter-spacing:-.045em;line-height:1.18}
+.portal .reader-heading .reader-copy-page {flex:none}
+@media(min-width:1040px){
+  .portal .reader-layout {max-width:94rem;margin-inline:auto;--rail:clamp(15rem,20vw,19rem)}
+  .portal .reader-layout.tree-closed {--rail:26px}
+  .portal .portal-content {padding:clamp(2.6rem,4vw,4rem) clamp(2.5rem,4vw,4.5rem) 6rem}
+  .portal .portal-sidebar {padding:2.6rem 1.75rem 2rem 0}
+  .portal .portal-sidebar > nav {margin-top:1.5rem}
+  .portal .portal-tree-link {min-height:2.65rem;font-size:.95rem}
+}

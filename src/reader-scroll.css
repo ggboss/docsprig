@@ -1,0 +1,7 @@
+/* The document is the scroll container; only an overflowing tree scrolls locally. */
+@media(min-width:761px){
+  .portal .reader-rail {position:sticky;align-self:start;top:var(--header-height);height:calc(100dvh - var(--header-height));min-height:0}
+  .portal .reader-rail #reader-tree {float:none;height:100%;overflow-y:auto;overscroll-behavior-y:contain}
+  .portal .reader-toggle {position:absolute;float:none;top:85%;right:0;margin:0;transform:translate(50%,-50%);display:grid;place-items:center;transition:background-color .2s ease-out}
+}
+@media(prefers-reduced-motion:reduce){.portal .reader-toggle {transition:none}}

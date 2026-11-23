@@ -1,0 +1,2 @@
+patchedDependencies:
+  zudoku@0.93.2: patches/zudoku@0.93.2.patch

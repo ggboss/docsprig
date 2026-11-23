@@ -1,0 +1,16 @@
+/* Use the parent parameter columns; only the field name is indented. */
+.parameter-schema-tree,.wb .api-editor fieldset.parameter-schema-tree{display:block;min-inline-size:0;margin:0;padding:0;border:0}
+.parameter-schema-tree :is(ul,li){list-style:none;margin:0;padding:0}
+.parameter-schema-tree .pst-row{display:grid;grid-template-columns:var(--param-cols,minmax(0,1fr) minmax(0,.7fr) minmax(0,1.5fr) 34px 32px);align-items:center;gap:8px;padding:3px 6px}
+.parameter-schema-tree .pst-key{min-width:0;position:relative;margin-inline-start:min(var(--pst-indent),25%);padding-inline-start:9px;border-inline-start:1px solid var(--line,#d5dde4)}
+.parameter-schema-tree .pst-item span.pst-key{font-size:12px;color:var(--muted,#59636e)}.pst-key b{color:var(--primary,#18794e);font-family:monospace}
+.wb .parameter-schema-tree .pst-row :is(input:not([type=checkbox]),select){width:100%;min-width:0;max-width:100%;height:30px;min-height:30px;margin:0;padding:2px 6px;font-size:13px}
+.wb .parameter-schema-tree .pst-row input[type=checkbox]{justify-self:center;width:16px;height:16px;min-height:0;margin:0}
+.wb .parameter-schema-tree button{display:grid;place-items:center;background:transparent;border:none;width:28px;height:28px;min-height:28px;padding:0;font:18px/1 system-ui}.wb .parameter-schema-tree button:hover:enabled{background:var(--wash,#edf4ee)}
+.pst-add{display:flex;align-items:center;gap:4px;margin-inline-start:calc(15px + var(--pst-indent));color:var(--muted,#59636e);font-size:12px}.wb .pst-add button{color:var(--primary,#18794e)}
+.parameter-schema-tree small{overflow-wrap:anywhere}.parameter-schema-tree .pst-key small[role=alert]{display:block}
+@media(max-width:640px){.parameter-schema-tree .pst-row{gap:4px}.parameter-schema-tree .pst-description{grid-column:1/-1;grid-row:2}.parameter-schema-tree .pst-item select{grid-column:2/-1}}
+.parameter-schema-tree .pst-branch > summary{width:fit-content;max-width:100%;box-sizing:border-box;margin-inline-start:var(--pst-indent);padding:3px 6px;overflow-wrap:anywhere;cursor:pointer;font-size:12px;color:var(--muted,#59636e)}
+.parameter-schema-tree .pst-branch > summary:focus-visible{outline:2px solid currentColor;outline-offset:1px}
+
+.parameter-schema-tree .pst-guard{display:block;color:var(--muted,#59636e);font-size:12px}

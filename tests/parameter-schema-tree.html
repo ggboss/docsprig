@@ -1,0 +1,14 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>Parameter schema tree fixture</title><div id="root"></div>
+<button id="save">保存</button>
+<script type="module">
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { flushSync } from 'react-dom';
+import Tree from '../src/ParameterSchemaTree.tsx';
+const root = createRoot(document.getElementById('root'));
+window.calls = 0;
+window.show = (schema, disabled = false) => {
+  window.value = schema;
+  flushSync(() => root.render(React.createElement(Tree, { schema, disabled, onValidityChange: valid => { document.querySelector('#save').disabled = !valid; }, onChange: next => { window.calls++; window.show(next); } })));
+};
+</script></html>

@@ -1,0 +1,8 @@
+.docs-auth { max-width: 26rem; margin: 4rem auto; padding: 2rem; border: 1px solid var(--border); border-radius: 12px; }
+.docs-auth h1 { font-size: 1.5rem; font-weight: 650; margin-bottom: .75rem; }
+.docs-auth form { display: grid; gap: .75rem; margin-top: 1.5rem; }
+.docs-auth input { width: 100%; border: 1px solid var(--input); border-radius: 6px; padding: .65rem .8rem; background: transparent; color: inherit; }
+.docs-auth button { border-radius: 6px; padding: .65rem 1rem; background: var(--primary); color: var(--primary-foreground); cursor: pointer; }
+.docs-auth button:disabled { opacity: .6; cursor: wait; }
+.docs-auth [role="alert"] { color: #c53535; }
+.docs-auth input:focus-visible, .docs-auth button:focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
