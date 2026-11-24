@@ -110,7 +110,7 @@ export default function Portal() {
   return <section className="portal not-prose" aria-label="已发布文档">
     <PublicTabs roots={tree?.roots} active={root?.id} />
     {!result ? <Notice title="正在加载文档目录…" /> : result.error ? <Notice title="目录加载失败" retry={retry}>{result.error}</Notice> : result.missing || !tree?.roots.length ?
-      <Notice title="暂无已发布内容">内容发布后将在此显示。</Notice> : !root ? <Notice title="找不到指定栏目"><Link to="/doc">返回文档首页</Link></Notice> :
+      <Notice title="暂无已发布内容" retry={retry}>内容发布后将在此显示。</Notice> : !root ? <Notice title="找不到指定栏目"><Link to="/doc">返回文档首页</Link></Notice> :
       <ReaderLayout docKey={`${selected?.id}:${selected?.url}`} directory={<Directory key={root.id} root={root} selected={selected?.id} tree={tree} />}>
           {requestedDoc !== null && !selected ? <Notice title="找不到指定文档">请选择当前栏目中的已发布文档。</Notice> : selected?.type === 'group' ?
             <><h1 className="portal-title">{selected.title}</h1><nav className="portal-child-links" aria-label="分组文档">{selected.children.map(n => <Link key={n.id} to={href(root.id, n.id)}>{n.title}<span aria-hidden="true">→</span></Link>)}</nav>{!selected.children.length && <Notice title="此目录暂无已发布文档" />}</> : selected ?

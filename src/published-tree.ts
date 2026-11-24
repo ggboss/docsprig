@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { publishedURL } from './published-url';
+import { fetchPublished } from './published-request.mjs';
 
 export type Item = { id: string; parentId: string | null; sort: number; title: string; type: 'group' | 'markdown' | 'api'; url?: string; children: Item[]; rootId: string };
 export type Tree = { roots: Item[]; byId: Map<string, Item> };
@@ -63,7 +64,7 @@ export function usePublished<T>(path: string | undefined, decode: (response: Res
     void (async () => {
       try {
         const url = publishedURL(path, window.location.href);
-        const response = await fetch(url, { signal:controller.signal, mode:'same-origin', redirect:'error', cache:'no-cache', credentials:'omit' });
+        const response = await fetchPublished(url, { signal:controller.signal, mode:'same-origin', redirect:'error', cache:'no-cache', credentials:'omit' });
         if (response.status === 404) { if (!disposed) setResult({ path, attempt, missing:true }); return; }
         if (!response.ok) throw Error(`服务器暂时无法提供内容（HTTP ${response.status}）`);
         if (response.headers.get('content-type')?.toLowerCase().includes('text/html')) throw Error('服务器返回了无效的发布内容');
