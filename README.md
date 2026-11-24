@@ -1,5 +1,7 @@
 # DocSprig（文芽）
 
+**简体中文** | [English](README.en.md)
+
 一个基于 Zudoku 的可定制 API 文档门户，提供公开浏览端、管理员工作台、Markdown 文档、OpenAPI 接口编辑、版本化草稿发布和双 MCP 入口。
 
 ## 效果预览
