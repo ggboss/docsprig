@@ -2,6 +2,28 @@
 
 一个基于 Zudoku 的可定制 API 文档门户，提供公开浏览端、管理员工作台、Markdown 文档、OpenAPI 接口编辑、版本化草稿发布和双 MCP 入口。
 
+## 效果预览
+
+以下为本地运行的真实界面，内容均为通用演示数据。
+
+### API 文档浏览
+
+左侧切换栏目和文档，正文展示接口参数、响应字段与多语言调用示例。
+
+![DocSprig API 文档浏览：目录、接口参数、响应与调用示例](docs/images/api-reference.jpg)
+
+### OpenAPI 可视化编辑
+
+管理员通过表单维护接口、参数、请求体和响应；保存草稿与发布分开操作。
+
+![DocSprig OpenAPI 编辑器：接口信息、参数分组和字段编辑](docs/images/openapi-editor.jpg)
+
+### Markdown 可视化编辑
+
+直接在正文中编辑，选中文字即可设置格式，无需手写 Markdown 源码。
+
+![DocSprig Markdown 编辑器：文档树、正文编辑和浮动格式工具栏](docs/images/markdown-editor.jpg)
+
 ## 特性
 
 - `/doc`：只读浏览已发布内容，目录和页面由发布快照驱动。
